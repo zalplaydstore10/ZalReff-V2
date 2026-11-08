@@ -1,4 +1,3 @@
-
 name: Build ZalReff V2
 
 on:
@@ -22,7 +21,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-          cache: maven
 
       - name: Extract source ZIP
         run: |
@@ -30,18 +28,22 @@ jobs:
           unzip -oq ZalReff-v2.0.0-Source.zip -d source
           POM=$(find source -name pom.xml -print -quit)
           if [ -z "$POM" ]; then
-            echo "pom.xml tidak ditemukan!"
+            echo "ERROR: pom.xml tidak ditemukan!"
             exit 1
           fi
           echo "PROJECT_DIR=$(dirname "$POM")" >> "$GITHUB_ENV"
 
       - name: Build with Maven
-        run: mvn --batch-mode -f "$PROJECT_DIR/pom.xml" clean package
+        run: mvn --batch-mode --no-transfer-progress -f "$PROJECT_DIR/pom.xml" clean package
+
+      - name: Verify JAR
+        run: |
+          test -f "$PROJECT_DIR/target/ZalReff-V2.jar"
+          jar tf "$PROJECT_DIR/target/ZalReff-V2.jar" | grep -qx plugin.yml
 
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
           name: ZalReff-V2-JAR
-          path: ${{ env.PROJECT_DIR }}/target/*.jar
+          path: ${{ env.PROJECT_DIR }}/target/ZalReff-V2.jar
           if-no-files-found: error
-          
