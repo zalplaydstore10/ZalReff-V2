@@ -1,0 +1,36 @@
+name: Build ZalReff V2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Extract source ZIP
+        run: unzip -o ZalReff-V2-Source.zip -d .
+
+      - name: Build with Maven
+        run: mvn -B -f ZalReff-V2/pom.xml clean package
+
+      - name: Upload plugin JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZalReff-V2-JAR
+          path: ZalReff-V2/target/*.jar
+          if-no-files-found: error
