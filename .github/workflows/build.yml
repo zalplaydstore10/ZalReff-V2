@@ -1,3 +1,4 @@
+
 name: Build ZalReff V2
 
 on:
@@ -20,7 +21,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-          cache: maven
 
       - name: Extract source ZIP
         run: unzip -o ZalReff-V2-Source.zip -d .
@@ -34,3 +34,4 @@ jobs:
           name: ZalReff-V2-JAR
           path: ZalReff-V2/target/*.jar
           if-no-files-found: error
+          
