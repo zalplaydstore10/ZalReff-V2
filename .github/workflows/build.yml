@@ -23,7 +23,7 @@ jobs:
           java-version: '17'
 
       - name: Extract source ZIP
-        run: unzip -o ZalReff-V2-Source.zip -d .
+  run: unzip -q ZalReff-v2.0.0-Source.zip -d .
 
       - name: Build with Maven
         run: mvn -B -f ZalReff-V2/pom.xml clean package
